@@ -16,5 +16,8 @@ interface FootballClubDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(clubs: List<FootballClub>)
 
+    @Query("SELECT * FROM clubs WHERE name LIKE '%' || :searchQuery || '%'")
+    fun searchClubsByName(searchQuery: String): List<FootballClub>
+
 
 }

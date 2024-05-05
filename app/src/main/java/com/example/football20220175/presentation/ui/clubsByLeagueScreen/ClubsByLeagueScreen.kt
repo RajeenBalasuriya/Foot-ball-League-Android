@@ -94,7 +94,7 @@ fun TeamItem(team: FootballClub) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = "idName: ${team.idTeam}")
         Text(text = "                                     ")
-        Text(text = "Name: ${team.Name}")
+        Text(text = "Name: ${team.name}")
         Text(text = "                                     ")
         Text(text = "strTeamShort: ${team.strTeamShort}")
         Text(text = "                                     ")

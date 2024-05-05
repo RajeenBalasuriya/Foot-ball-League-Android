@@ -16,4 +16,7 @@ interface FootballLeagueDao {
     fun getAllLeagues(): List<FootballLeague>
     @Query("DELETE FROM leagues")
     fun deleteAllLeagues()
+
+    @Query("SELECT * FROM leagues WHERE strLeague LIKE '%' || :searchQuery || '%'")
+    fun searchLeaguesByName(searchQuery: String): List<FootballLeague>
 }
