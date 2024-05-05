@@ -14,4 +14,6 @@ interface FootballLeagueDao {
     fun insertLeagues(leagues: List<FootballLeague>)
     @Query("SELECT * FROM leagues")
     fun getAllLeagues(): List<FootballLeague>
+    @Query("DELETE FROM leagues")
+    fun deleteAllLeagues()
 }
