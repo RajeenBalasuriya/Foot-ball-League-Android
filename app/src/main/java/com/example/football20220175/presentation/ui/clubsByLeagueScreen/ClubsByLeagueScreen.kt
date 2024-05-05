@@ -1,16 +1,30 @@
 package com.example.football20220175.presentation.ui.clubsByLeagueScreen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.football20220175.data.network.Team
+import com.example.football20220175.data.db.dao.FootballClubDao
+
+import com.example.football20220175.data.db.entity.FootballClub
 import com.example.football20220175.data.network.searchClubsByLeagues
 import com.example.football20220175.presentation.ui.components.CustomButton
 import com.example.football20220175.presentation.ui.components.StyledTextField
@@ -18,9 +32,9 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun ClubsByLeagueScreen() {
+fun ClubsByLeagueScreen(clubDao: FootballClubDao) {
     var leagueName by remember { mutableStateOf("") }
-    var teams by remember { mutableStateOf<List<Team>>(emptyList()) }
+    var clubs by remember { mutableStateOf<List<FootballClub>>(emptyList()) }
     var isRequestSucessful by remember { mutableStateOf(false) }
     var hasRequestedAtLeastOnce by remember { mutableStateOf(false) }
 
@@ -39,23 +53,22 @@ fun ClubsByLeagueScreen() {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
+        //Retreive Clubs Buttons
         CustomButton(text = "Retrieve Clubs", width = 200,onClick = {
             scope.launch {
-                teams = searchClubsByLeagues(leagueName)
-                isRequestSucessful = teams.isNotEmpty() // Update the flag based on if teams are found or not
+                clubs = searchClubsByLeagues(leagueName) // Make the api request and update the teams list with the result
+                isRequestSucessful = clubs.isNotEmpty() // Update the flag based on if teams are found or not
                 hasRequestedAtLeastOnce = true // Mark that a request has been made at least once
-
-                println("----------------------------+++++++++++++++++++++++")
-                teams.forEach(){
-                    println(it)
-                }
             }
         })
 
-        Spacer(modifier = Modifier.height(8.dp))
+        //Save Clubs to Database
+        CustomButton(text = "Save clubs to Database", width = 200,onClick = {
+            scope.launch {
+                clubDao.insertAll(clubs)
 
-        CustomButton(text = "Save clubs to Database", width = 200,onClick = { /*TODO*/ })
+            }
+        })
 
         // Display the retrieved teams in a scrollable list if the api request is successful
         if (hasRequestedAtLeastOnce) {
@@ -66,7 +79,7 @@ fun ClubsByLeagueScreen() {
                         .background(Color.LightGray),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    items(teams) { team ->
+                    items(clubs) { team ->
                         TeamItem(team = team)
                     }
                 }
@@ -77,7 +90,7 @@ fun ClubsByLeagueScreen() {
     }
 }
 @Composable
-fun TeamItem(team: Team) {
+fun TeamItem(team: FootballClub) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = "idName: ${team.idTeam}")
         Text(text = "                                     ")

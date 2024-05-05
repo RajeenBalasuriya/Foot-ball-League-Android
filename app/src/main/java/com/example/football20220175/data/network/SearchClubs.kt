@@ -1,5 +1,6 @@
 package com.example.football20220175.data.network
 
+import com.example.football20220175.data.db.entity.FootballClub
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -8,31 +9,15 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-// Define a data class to represent the structure of the JSON objects
-data class Team(
-    val idTeam: String,
-    val Name: String,
-    val strTeamShort: String,
-    val strAlternate: String,
-    val intFormedYear: String,
-    val strLeague: String,
-    val idLeague: String,
-    val strStadium: String,
-    val strKeywords: String,
-    val strStadiumThumb: String,
-    val strStadiumLocation: String,
-    val intStadiumCapacity: String,
-    val strWebsite: String,
-    val strTeamJersey: String,
-    val strTeamLogo: String
-)
+// A data class to represent the structure of the JSON objects
 
-suspend fun searchClubsByLeagues(keyword: String): List<Team> {
+
+suspend fun searchClubsByLeagues(keyword: String): List<FootballClub> {
     try {
         val url_string = "https://www.thesportsdb.com/api/v1/json/3/search_all_teams.php?l=$keyword"
         val url = URL(url_string)
         val con: HttpURLConnection = url.openConnection() as HttpURLConnection
-        var teamsList = mutableListOf<Team>()
+        var teamsList = mutableListOf<FootballClub>()
 
         withContext(Dispatchers.IO) {
             val bf = BufferedReader(InputStreamReader(con.inputStream))
@@ -46,7 +31,7 @@ suspend fun searchClubsByLeagues(keyword: String): List<Team> {
             for (i in 0 until teamsArray.length()) {
                 val teamObject = teamsArray.getJSONObject(i)
                 teamsList.add(
-                    Team(
+                    FootballClub(
                         idTeam = teamObject.getString("idTeam"),
                         Name = teamObject.getString("strTeam"),
                         strTeamShort = teamObject.getString("strTeamShort"),
