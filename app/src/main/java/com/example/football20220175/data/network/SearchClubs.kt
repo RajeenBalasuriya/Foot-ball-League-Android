@@ -40,7 +40,7 @@ private fun parseJsonResponse(jsonString: String): MutableList<FootballClub> {
         teamsList.add(
             FootballClub(
                 idTeam = teamObject.getString("idTeam"),
-                Name = teamObject.getString("strTeam"),
+                name = teamObject.getString("strTeam"),
                 strTeamShort = teamObject.getString("strTeamShort"),
                 strAlternate = teamObject.getString("strAlternate"),
                 intFormedYear = teamObject.getString("intFormedYear"),

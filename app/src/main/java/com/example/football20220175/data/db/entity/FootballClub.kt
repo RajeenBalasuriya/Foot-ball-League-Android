@@ -15,7 +15,7 @@ import androidx.room.PrimaryKey
 data class FootballClub(
     @PrimaryKey
     val idTeam: String,
-    val Name: String,
+    val name: String,
     val strTeamShort: String,
     val strAlternate: String,
     val intFormedYear: String,
