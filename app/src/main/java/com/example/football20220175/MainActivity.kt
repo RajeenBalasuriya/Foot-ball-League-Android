@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.football20220175.data.db.database.FootballDatabase
+
 import com.example.football20220175.presentation.ui.mainScreen.MainScreen
 
 import com.example.football20220175.ui.theme.FootBall20220175Theme
@@ -27,6 +28,7 @@ class MainActivity : ComponentActivity() {
                     val footballDatabase = FootballDatabase.getInstance(applicationContext)
                     val footballDao = footballDatabase.leagueDao()
                     MainScreen(footballDatabase, footballDao)
+
 
 
                 }
