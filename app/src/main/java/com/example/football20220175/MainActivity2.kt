@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.football20220175.data.db.database.FootballDatabase
 import com.example.football20220175.presentation.ui.clubsByLeagueScreen.ClubsByLeagueScreen
 import com.example.football20220175.ui.theme.FootBall20220175Theme
 
@@ -23,7 +24,9 @@ class MainActivity2 : ComponentActivity() {
                     contentAlignment = Alignment.Center,
 
                 ) {
-                    ClubsByLeagueScreen()
+                   var FootballDatabase= FootballDatabase.getInstance(applicationContext)
+                    val clubDao = FootballDatabase.clubDao()
+                    ClubsByLeagueScreen(clubDao)
                 }
 
             }

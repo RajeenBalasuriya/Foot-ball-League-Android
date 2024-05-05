@@ -27,6 +27,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     val footballDatabase = FootballDatabase.getInstance(applicationContext)
+
                     val footballDao = footballDatabase.leagueDao()
 
                     MainScreen(footballDatabase, footballDao)

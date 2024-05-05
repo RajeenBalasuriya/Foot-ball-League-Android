@@ -4,13 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.football20220175.data.db.dao.FootballClubDao
 import com.example.football20220175.data.db.dao.FootballLeagueDao
+import com.example.football20220175.data.db.entity.FootballClub
 import com.example.football20220175.data.db.entity.FootballLeague
-import java.io.File
 
-@Database(entities = [FootballLeague::class], version = 1, exportSchema = false)
+@Database(entities = [FootballLeague::class, FootballClub::class], version = 1, exportSchema = false)
 abstract class FootballDatabase : RoomDatabase() {
     abstract fun leagueDao(): FootballLeagueDao
+    abstract  fun clubDao(): FootballClubDao
 
 
     companion object {
