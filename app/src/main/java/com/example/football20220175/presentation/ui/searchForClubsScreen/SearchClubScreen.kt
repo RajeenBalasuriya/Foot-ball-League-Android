@@ -41,23 +41,18 @@ fun SearchClubScreen(
     leagueDao: FootballLeagueDao
 ) {
     var searchName by remember { mutableStateOf("") }
-    var searchResults by remember { mutableStateOf<List<Any>>(emptyList()) }
+    var searchResults by remember { mutableStateOf<List<FootballClub>>(emptyList()) }
     val scope = rememberCoroutineScope()
 
     // Function to perform search on click of search button
     fun performSearch() {
         scope.launch {
             // Perform database operations in a coroutine scope
-            val clubResults = withContext(Dispatchers.IO) {
+            searchResults = withContext(Dispatchers.IO) {
                 clubDao.searchClubsByName(searchName)
             }
-            val leagueResults = withContext(Dispatchers.IO) {
-                leagueDao.searchLeaguesByName(searchName)
-            }
-            searchResults = clubResults + leagueResults
         }
     }
-
 
     Column(
         modifier = Modifier
@@ -65,10 +60,8 @@ fun SearchClubScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
-    )
-    {
-
-        StyledTextField(labelText = "part of a name of a club or a league") {
+    ) {
+        StyledTextField(labelText = "part of a name of a club") {
             searchName = it
         }
 
@@ -86,7 +79,7 @@ fun SearchClubScreen(
 }
 
 @Composable
-fun DisplaySearchResults(searchResults: List<Any>) {
+fun DisplaySearchResults(searchResults: List<FootballClub>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -95,20 +88,12 @@ fun DisplaySearchResults(searchResults: List<Any>) {
         LazyColumn(
             modifier = Modifier
                 .padding(20.dp)
-                .fillMaxWidth(),
-            content = {
-                items(searchResults) { result ->
-                    when (result) {
-                        is FootballClub -> {
-                            Text(text = "Club: ${result.name}")
-                        }
-                        is FootballLeague -> {
-                            Text(text = "League: ${result.strLeague}")
-                        }
-                    }
-                }
+                .fillMaxWidth()
+        ) {
+            items(searchResults) { club ->
+                Text(text = "Club: ${club.name}")
             }
-        )
+        }
     }
 }
 
