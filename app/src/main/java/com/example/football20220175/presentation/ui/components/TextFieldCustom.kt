@@ -28,6 +28,7 @@ fun StyledTextField(labelText: String, onValueChanged: (String) -> Unit) {
         label = { Text(text = labelText) },
         maxLines = 2,
         textStyle = TextStyle(color = Color.Blue, fontWeight = FontWeight.Bold),
-        modifier = Modifier.padding(20.dp)
+        modifier = Modifier.padding(40.dp)
+
     )
 }
