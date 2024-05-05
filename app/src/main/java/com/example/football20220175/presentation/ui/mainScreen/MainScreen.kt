@@ -38,7 +38,7 @@ fun MainScreen(
             onClick = {
                 coroutineScope.launch {
                     withContext(Dispatchers.IO) {
-
+                        footballDao.deleteAllLeagues()//clear the leagues table
                         addLeague(footballDatabase, footballDao)
                     }
                 }

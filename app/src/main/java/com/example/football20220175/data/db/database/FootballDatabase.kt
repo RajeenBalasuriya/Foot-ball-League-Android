@@ -12,6 +12,7 @@ import java.io.File
 abstract class FootballDatabase : RoomDatabase() {
     abstract fun leagueDao(): FootballLeagueDao
 
+
     companion object {
         @Volatile
         private var INSTANCE: FootballDatabase? = null
@@ -28,12 +29,13 @@ abstract class FootballDatabase : RoomDatabase() {
             }
         }
 
-        // Method to drop the schema by deleting the database file
-        fun dropSchema(context: Context) {
-            val dbFile = context.getDatabasePath("football_database")
-            if (dbFile.exists()) {
-                dbFile.delete()
-            }
+    }
+
+    // Method to drop the schema by deleting the database file
+    fun dropSchema(context: Context) {
+        val dbFile = context.getDatabasePath("football_database")
+        if (dbFile.exists()) {
+            dbFile.delete()
         }
     }
 }
