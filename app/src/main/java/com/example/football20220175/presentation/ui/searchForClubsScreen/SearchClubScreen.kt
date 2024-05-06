@@ -20,11 +20,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
@@ -45,8 +48,8 @@ fun SearchClubScreen(
     clubDao: FootballClubDao,
     leagueDao: FootballLeagueDao
 ) {
-    var searchName by remember { mutableStateOf("") }
-    var searchResults by remember { mutableStateOf<List<FootballClub>>(emptyList()) }
+    var searchName by rememberSaveable { mutableStateOf("") }
+    var searchResults by rememberSaveable { mutableStateOf<List<FootballClub>>(emptyList()) }
     val scope = rememberCoroutineScope()
 
     // Function to perform search on click of search button
@@ -72,9 +75,9 @@ fun SearchClubScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomButton(text = "Search", width = 200, onClick = {
+        CustomButton(text = "Search", width = 200) {
             performSearch()
-        })
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -86,26 +89,22 @@ fun SearchClubScreen(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun DisplaySearchResults(searchResults: List<FootballClub>) {
-    Box(
+    LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(searchResults) { club ->
-                    ClubItem(club)
-                }
-            }
+        // Add a header as a separate item
+        item {
+            Text(
+                text = "Search Results",
+                style = TextStyle(fontWeight = FontWeight.Bold),
+                modifier = Modifier.padding(16.dp)
+            )
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color.LightGray)
-        )
+
+        // Main items
+        items(searchResults) { club ->
+            ClubItem(club)
+        }
     }
 }
 @OptIn(ExperimentalCoilApi::class)

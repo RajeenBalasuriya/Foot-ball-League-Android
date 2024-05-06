@@ -15,15 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.football20220175.data.db.dao.FootballClubDao
-
 import com.example.football20220175.data.db.entity.FootballClub
 import com.example.football20220175.data.network.searchClubsByLeagues
 import com.example.football20220175.presentation.ui.components.CustomButton
@@ -33,13 +32,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ClubsByLeagueScreen(clubDao: FootballClubDao) {
-    var leagueName by remember { mutableStateOf("") }
-    var clubs by remember { mutableStateOf<List<FootballClub>>(emptyList()) }
-    var isRequestSucessful by remember { mutableStateOf(false) }
-    var hasRequestedAtLeastOnce by remember { mutableStateOf(false) }
+    var leagueName by rememberSaveable { mutableStateOf("") }
+    var clubs by rememberSaveable { mutableStateOf<List<FootballClub>>(emptyList()) }
+    var isRequestSuccessful by rememberSaveable { mutableStateOf(false) }
+    var hasRequestedAtLeastOnce by rememberSaveable { mutableStateOf(false) }
 
-    //creates a Coroutine scope bound to the lifecycle of the composable
-    val scope= rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -49,30 +47,29 @@ fun ClubsByLeagueScreen(clubDao: FootballClubDao) {
         verticalArrangement = Arrangement.Center
     ) {
         StyledTextField(labelText = "Enter football league name") {
-            leagueName = it // Update the screen variable with the value of the text field
+            leagueName = it
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        //Retreive Clubs Buttons
-        CustomButton(text = "Retrieve Clubs", width = 200,onClick = {
-            scope.launch {
-                clubs = searchClubsByLeagues(leagueName) // Make the api request and update the teams list with the result
-                isRequestSucessful = clubs.isNotEmpty() // Update the flag based on if teams are found or not
-                hasRequestedAtLeastOnce = true // Mark that a request has been made at least once
-            }
-        })
 
-        //Save Clubs to Database
-        CustomButton(text = "Save clubs to Database", width = 200,onClick = {
+        CustomButton(text = "Retrieve Clubs", width = 200) {
+            scope.launch {
+                clubs = searchClubsByLeagues(leagueName)
+                isRequestSuccessful = clubs.isNotEmpty()
+                hasRequestedAtLeastOnce = true
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CustomButton(text = "Save clubs to Database", width = 200) {
             scope.launch {
                 clubDao.insertAll(clubs)
-
             }
-        })
+        }
 
-        // Display the retrieved teams in a scrollable list if the api request is successful
         if (hasRequestedAtLeastOnce) {
-            if (isRequestSucessful) {
+            if (isRequestSuccessful) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -84,7 +81,7 @@ fun ClubsByLeagueScreen(clubDao: FootballClubDao) {
                     }
                 }
             } else {
-                Text(text = "No teams found for the above enter league ")
+                Text(text = "No teams found for the above entered league")
             }
         }
     }
