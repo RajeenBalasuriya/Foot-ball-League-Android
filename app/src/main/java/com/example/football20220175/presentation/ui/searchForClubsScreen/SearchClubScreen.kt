@@ -1,14 +1,17 @@
 package com.example.football20220175.presentation.ui.searchForClubsScreen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -21,12 +24,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.example.football20220175.data.db.dao.FootballClubDao
 import com.example.football20220175.data.db.dao.FootballLeagueDao
 import com.example.football20220175.data.db.database.FootballDatabase
 import com.example.football20220175.data.db.entity.FootballClub
-import com.example.football20220175.data.db.entity.FootballLeague
 import com.example.football20220175.presentation.ui.components.CustomButton
 import com.example.football20220175.presentation.ui.components.StyledTextField
 import kotlinx.coroutines.Dispatchers
@@ -78,22 +83,53 @@ fun SearchClubScreen(
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun DisplaySearchResults(searchResults: List<FootballClub>) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Color.LightGray)
+        modifier = Modifier.fillMaxSize()
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .padding(20.dp)
-                .fillMaxWidth()
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            items(searchResults) { club ->
-                Text(text = "Club: ${club.name}")
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(searchResults) { club ->
+                    ClubItem(club)
+                }
             }
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color.LightGray)
+        )
+    }
+}
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+fun ClubItem(club: FootballClub) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        // Load and display club logo image
+        Image(
+            painter = rememberImagePainter(club.strTeamLogo),
+            contentDescription = "Club Logo",
+            modifier = Modifier.size(50.dp),
+            contentScale = ContentScale.Fit
+        )
+
+        // Display club name
+        Text(
+            text = club.name,
+            modifier = Modifier.padding(start = 16.dp)
+        )
     }
 }
 
