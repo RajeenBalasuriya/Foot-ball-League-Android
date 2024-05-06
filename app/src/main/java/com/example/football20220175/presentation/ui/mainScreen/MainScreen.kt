@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.football20220175.MainActivity2
 import com.example.football20220175.MainActivity3
+import com.example.football20220175.MainActivity4
 import com.example.football20220175.data.db.dao.FootballLeagueDao
 import com.example.football20220175.data.db.database.FootballDatabase
 import com.example.football20220175.presentation.ui.clubsByLeagueScreen.ClubsByLeagueScreen
@@ -53,6 +54,11 @@ fun MainScreen(
         })
         CustomButton(text = "Search for Clubs", width = 250, onClick = {
             val i =Intent(context, MainActivity3::class.java)
+            context.startActivity(i)
+        })
+
+        CustomButton(text = "Search for jerseys by club name", width = 250, onClick = {
+            val i =Intent(context, MainActivity4::class.java)
             context.startActivity(i)
         })
 

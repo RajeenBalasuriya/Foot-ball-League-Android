@@ -30,6 +30,23 @@ suspend fun searchClubsByLeagues(keyword: String): List<FootballClub> {
     }
 }
 
+suspend fun searchClubsByPartialName(searchString: String): List<FootballClub> {
+    return withContext(Dispatchers.IO) {
+        try {
+            val baseUrl = "https://www.thesportsdb.com/api/v1/json/3/"
+            val searchUrl = "${baseUrl}searchteams.php?t=%$searchString%"
+            val url = URL(searchUrl)
+            val con: HttpURLConnection = url.openConnection() as HttpURLConnection
+            val bf = BufferedReader(InputStreamReader(con.inputStream))
+            val jsonString = bf.readText()
+            parseJsonResponse(jsonString)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+}
+
 private fun parseJsonResponse(jsonString: String): MutableList<FootballClub> {
     val teamsList = mutableListOf<FootballClub>()
     val response = JSONObject(jsonString)
